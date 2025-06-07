@@ -3,7 +3,7 @@ import { uploadSingle, propertiesFunctions } from "./../method/properties";
 const router = express.Router();
 const dashboard = require("./../method/dashboard");
 const user = require("./../method/user");
-const image = require("./../method/image");
+import image from "./../method/image";
 
 // ! ########################################
 // ! ############ - USER - ##############
@@ -27,6 +27,21 @@ router.post(
   image.uploadMultipleMiddleware,
   image.handleMultipleImageUpload
 );
+
+router.get(
+  "/images/user/:userName",
+  image.getImagesByUser
+);
+
+router.get(
+  "/images/filename/:filename",
+  image.getImageDocByFilename
+)
+
+router.get(
+  "/images/file/:filename",
+  image.getImageByFilename
+)
 
 // ! ########################################
 // ! ############ - PROPERTY - ##############
