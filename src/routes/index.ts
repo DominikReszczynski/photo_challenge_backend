@@ -34,14 +34,29 @@ router.get(
 );
 
 router.get(
-  "/images/filename/:filename",
+  "/images/filename/:fileName",
   image.getImageDocByFilename
 )
 
 router.get(
-  "/images/file/:filename",
+  "/images/file/:fileName",
   image.getImageByFilename
 )
+
+router.post(
+  "/images/:fileName/like",
+  image.likeImage
+);
+
+router.post(
+  "/images/:fileName/unlike",
+  image.unlikeImage
+);
+
+router.get(
+  "/images/top-liked",
+  image.getTopLikedImages
+);
 
 // ! ########################################
 // ! ############ - PROPERTY - ##############
