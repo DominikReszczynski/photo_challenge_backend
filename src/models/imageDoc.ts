@@ -6,6 +6,7 @@ export interface ImageDoc extends Document {
   tags: string[];
   filename: string;
   likes: number;
+  likedBy: string[] 
   comments: Comment[];
   uploadedAt: Date;
   userName: String;
@@ -16,6 +17,7 @@ const ImageSchema = new Schema<ImageDoc>({
   tags: { type: [String], default: [] },
   filename: { type: String, required: true },
   likes: { type: Number, default: 0 },
+  likedBy: { type: [String], default: [] },
   comments: { type: [CommentSchema], default: [] },
   uploadedAt: { type: Date, default: Date.now },
   userName: { type: String, required: true},

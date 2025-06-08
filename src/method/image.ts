@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { ImageDoc, ImageModel } from "../models/imageDoc";
+import Challenge from "../models/challange";
 
 // Folder docelowy
 const uploadDir = "./uploads";
@@ -124,6 +125,91 @@ const imageFunctions = {
     }
     
     return res.status(404).send("Plik nie istnieje.");
+  },
+  
+  async likeImage(req: any, res: any) {
+    const { fileName } = req.params;
+    const userName = req.user?.userName || req.body.userName;
+    
+    if (!userName) return res.status(400).json({ success: false, message: "No user ID provided." });
+    if (!fileName) return res.status(400).json({ success: false, message: "No file name provided." });
+    
+    try {
+      const image = await ImageModel.findOne({ filename: fileName });
+      if (!image) return res.status(404).json({ success: false, message: "Image not found." });
+      
+      if (!image.likedBy.includes(userName)) {
+        image.likes += 1;
+        image.likedBy.push(userName);
+        await image.save();
+        return res.status(200).json({ success: true, likes: image.likes });
+      }
+      
+      res.status(202).json({ success: true, message: "User already liked this photo", likes: image.likes });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  },
+  
+  async unlikeImage(req: any, res: any) {
+    const { fileName } = req.params;
+    const userName = req.user?.userName || req.body.userName;
+    
+    if (!userName) return res.status(400).json({ success: false, message: "No user ID provided." });
+    if (!fileName) return res.status(400).json({ success: false, message: "No file name provided." });
+    
+    try {
+      const image = await ImageModel.findOne({ filename: fileName });
+      if (!image) return res.status(404).json({ success: false, message: "Image not found." });
+      
+      if (image.likedBy.includes(userName)) {
+        image.likes = Math.max(image.likes - 1, 0);
+        image.likedBy = image.likedBy.filter((id) => id.toString() !== userName.toString());
+        await image.save();
+        return res.status(200).json({ success: true, likes: image.likes });
+      }
+      
+      res.status(202).json({ success: true, message: "User didn't like this photo before", likes: image.likes });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Server error." });
+    }
+  },
+  
+  async getTopLikedImages(req: any, res: any) {
+    const { challengeId, page = 1, limit = 10 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    try {
+      let filter: any = {};
+      if (challengeId) {
+        filter.challengeId = challengeId;
+      } else {
+        // Find active challenge
+        const now = new Date();
+        const activeChallenge = await Challenge.findOne({
+          startDate: { $lte: now },
+          endDate: { $gte: now }
+        });
+        
+        if (activeChallenge) {
+          filter.challengeId = activeChallenge._id;
+        } else {
+          return res.status(404).json({ success: false, message: "No active challenge found." });
+        }
+      }
+      
+      const images = await ImageModel.find(filter)
+      .sort({ likes: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+      
+      res.json({ success: true, images });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Server error." });
+    }
   },
 };
 
