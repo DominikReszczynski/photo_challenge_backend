@@ -16,3 +16,4 @@ const challengeSchema = new mongoose.Schema({
 
 const Challenge = mongoose.model<IChallenge>("Challenge", challengeSchema, "challenge");
 export default Challenge;
+

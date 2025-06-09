@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { ImageDoc, ImageModel } from "../models/imageDoc";
-import Challenge from "../models/challange";
+import Challenge from "../models/challenge";
 
 // Folder docelowy
 const uploadDir = "./uploads";
@@ -95,14 +95,14 @@ const imageFunctions = {
   },
   
   async getImageDocByFilename(req: any, res: any) {
-    const { filename } = req.params;
+    const { fileName } = req.params;
     
-    if (!filename) {
+    if (!fileName) {
       return res.status(400).send({ success: false, message: "Brak filename." });
     }
     
     try {
-      const image = await ImageModel.findOne({ filename });
+      const image = await ImageModel.findOne({ fileName });
       
       if (!image) {
         return res.status(404).send({ success: false, message: "Nie znaleziono zdjęcia." });
@@ -117,8 +117,8 @@ const imageFunctions = {
   
   async getImageByFilename(req: any, res: any) {
     
-    const { filename } = req.params;
-    const filePath = path.resolve("uploads", filename);
+    const { fileName } = req.params;
+    const filePath = path.resolve("uploads", fileName);
     
     if (fs.existsSync(filePath)) {
       return res.status(200).sendFile(filePath);
