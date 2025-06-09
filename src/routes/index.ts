@@ -4,6 +4,7 @@ const router = express.Router();
 const dashboard = require("./../method/dashboard");
 const user = require("./../method/user");
 import image from "./../method/image";
+import challenge from "../method/challenge";
 
 // ! ########################################
 // ! ############ - USER - ##############
@@ -56,6 +57,20 @@ router.post(
 router.get(
   "/images/top-liked",
   image.getTopLikedImages
+);
+
+// ! ########################################
+// ! ############ - CHALLENGE - #############
+// ! ########################################
+
+router.get(
+  "/challenge",
+  challenge.getChallenges
+);
+
+router.get(
+  "/challenge/:challengeId",
+  challenge.getChallenge
 );
 
 // ! ########################################
