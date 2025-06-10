@@ -4,7 +4,7 @@ import { Comment, CommentSchema } from "./comment";
 export interface ImageDoc extends Document {
   challengeId: string;
   tags: string[];
-  filename: string;
+  fileName: string;
   likes: number;
   likedBy: string[] 
   comments: Comment[];
@@ -15,7 +15,7 @@ export interface ImageDoc extends Document {
 const ImageSchema = new Schema<ImageDoc>({
   challengeId: { type: String, default: "" },
   tags: { type: [String], default: [] },
-  filename: { type: String, required: true },
+  fileName: { type: String, required: true },
   likes: { type: Number, default: 0 },
   likedBy: { type: [String], default: [] },
   comments: { type: [CommentSchema], default: [] },

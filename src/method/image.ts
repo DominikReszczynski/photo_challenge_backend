@@ -45,30 +45,30 @@ const imageFunctions = {
       
       const challengeId = req.body.challengeId || null;
       
-      const username = req.user?.username || req.body.username || null;
+      const userName = req.user?.userName || req.body.userName || null;
       
       const createdImages: ImageDoc[] = [];
       
       for (const file of req.files as Express.Multer.File[]){
         const imageDoc = new ImageModel({
-          filename: file.filename,
+          fileName: file.filename,
           likes: 0,
           comments: [],
           tags: tags,
           challengeId,
           uploadedAt: new Date(),
-          userName: username,
+          userName: userName,
         });
         
         await imageDoc.save();
         createdImages.push(imageDoc);
       }
       
-      const filenames = createdImages.map(img => img.filename);
+      const fileNames = createdImages.map(img => img.fileName);
       
-      console.log("Utworzone dokumenty zdjęć:", filenames);
+      console.log("Utworzone dokumenty zdjęć:", fileNames);
       
-      return res.status(200).send({ success: true, filenames });
+      return res.status(200).send({ success: true, fileNames });
     } catch (error) {
       console.error("Błąd przy przesyłaniu zdjęć:", error);
       return res.status(500).send({
@@ -98,7 +98,7 @@ const imageFunctions = {
     const { fileName } = req.params;
     
     if (!fileName) {
-      return res.status(400).send({ success: false, message: "Brak filename." });
+      return res.status(400).send({ success: false, message: "Brak fileName." });
     }
     
     try {
@@ -135,7 +135,7 @@ const imageFunctions = {
     if (!fileName) return res.status(400).json({ success: false, message: "No file name provided." });
     
     try {
-      const image = await ImageModel.findOne({ filename: fileName });
+      const image = await ImageModel.findOne({ fileName: fileName });
       if (!image) return res.status(404).json({ success: false, message: "Image not found." });
       
       if (!image.likedBy.includes(userName)) {
@@ -160,7 +160,7 @@ const imageFunctions = {
     if (!fileName) return res.status(400).json({ success: false, message: "No file name provided." });
     
     try {
-      const image = await ImageModel.findOne({ filename: fileName });
+      const image = await ImageModel.findOne({ fileName: fileName });
       if (!image) return res.status(404).json({ success: false, message: "Image not found." });
       
       if (image.likedBy.includes(userName)) {
