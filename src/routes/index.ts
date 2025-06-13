@@ -29,49 +29,30 @@ router.post(
   image.handleMultipleImageUpload
 );
 
-router.get(
-  "/images/user/:userName",
-  image.getImagesByUser
-);
+router.get("/images/user/:userName", image.getImagesByUser);
 
-router.get(
-  "/images/filename/:fileName",
-  image.getImageDocByFilename
-)
+router.get("/images/filename/:fileName", image.getImageDocByFilename);
 
-router.get(
-  "/images/file/:fileName",
-  image.getImageByFilename
-)
+router.get("/images/file/:fileName", image.getImageByFilename);
 
-router.post(
-  "/images/:fileName/like",
-  image.likeImage
-);
+router.post("/images/:fileName/like", image.likeImage);
 
-router.post(
-  "/images/:fileName/unlike",
-  image.unlikeImage
-);
+router.post("/images/:fileName/unlike", image.unlikeImage);
 
-router.get(
-  "/images/top-liked",
-  image.getTopLikedImages
-);
+router.get("/images/top-liked", image.getTopLikedImages);
 
 // ! ########################################
 // ! ############ - CHALLENGE - #############
 // ! ########################################
 
-router.get(
-  "/challenge",
-  challenge.getChallenges
-);
+// Pobranie wszystkich wyzwań
+router.get("/challenge", challenge.getChallenges);
 
-router.get(
-  "/challenge/:challengeId",
-  challenge.getChallenge
-);
+// Pobranie jednego wyzwania po ID
+router.get("/challenge/:challengeId", challenge.getChallenge);
+
+// **NOWY**: tworzenie wyzwania
+router.post("/challenge", challenge.createChallenge);
 
 // ! ########################################
 // ! ############ - PROPERTY - ##############
